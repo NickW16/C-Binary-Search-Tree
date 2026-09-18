@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "randomArrayCreator.h"
-#include "node.h"
+#include "arraySorter.h"
 
 int main() {
 
@@ -8,10 +8,21 @@ int main() {
 	int array[10];
 	randomArrayCreator(array, 10);
 
-	printf("[ ");
+	printf("Original array (10): [ ");
 	for (int i = 0; i < 10; i++) {
 		printf("%d", array[i]);
 		if (i < 9) printf(", ");
+	}
+	printf(" ]\n");
+
+	// sort and remove duplicates:
+	int newSize = arraySorter(array, 10);
+
+	// print sorted
+	printf("Sorted (%d): [ ", newSize);
+	for (int i = 0; i < newSize; i++) {
+		printf("%d", array[i]);
+		if (i < newSize - 1) printf(", ");
 	}
 	printf(" ]\n");
 
