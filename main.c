@@ -27,6 +27,22 @@ void inOrder(struct Node* root) {
 	}
 }
 
+void postOrder(struct Node* root) {
+	if (root != NULL) {
+		postOrder(root->left);
+		postOrder(root->right);
+		printf("%d ", root->data);
+	}
+}
+
+void preOrder(struct Node* root) {
+	if (root != NULL) {
+		printf("%d ", root->data);
+		preOrder(root->left);
+		preOrder(root->right);
+	}
+}
+
 // operations:
 struct Node* insert(struct Node* root, int value) {
 	if (root == NULL) {
@@ -94,6 +110,23 @@ struct Node* deleteItem(struct Node* root, int value) {
 	}
 
 	return root;
+}
+
+struct Node* find(struct Node* root, int value) {
+	if (root == NULL) {
+		return NULL;
+	}
+
+	if (root->data == value) {
+		printf("Value %d was found in the BST!\n", value);
+		return root;
+	}
+
+	if (value < root->data) {
+		return find(root->left, value);
+	} else {
+		return find(root->right, value);
+	}
 }
 
 // print a tree
@@ -168,13 +201,20 @@ int main() {
 
 	// test cases:
 	printf("--Test cases:\n");
-	printf("inserting number: 50\n");
+	printf("inserting number: 50 and 22\n");
 	root = insert(root, 50);
+	root = insert(root, 22);
 
 	printf("Deleting numbers 80, 50 and 37 (if exists)\n");
 	root = deleteItem(root, 80);
 	root = deleteItem(root, 50);
 	root = deleteItem(root, 37);
+
+	printf("\n -- Testing find --\n");
+	struct Node* result = find(root, 22);
+	if (result == NULL) {
+		printf("22 not found in tree\n");
+	}
 
 	printTree(root);
 
