@@ -5,12 +5,10 @@
 
 // build tree
 struct Node* buildTree(int* arr, int start, int end) {
-	if (start > end) return NULL; // base case
+	if (start > end) return NULL;
 
-	// find middle
 	int middle = (start + end) / 2;
 
-	// root
 	struct Node* root = createNode(arr[middle]);
 
 	root->left = buildTree(arr, start, middle - 1);
@@ -25,6 +23,25 @@ void inOrder(struct Node* root) {
 		printf("%d ", root->data);
 		inOrder(root->right);
 	}
+}
+
+// operations:
+struct Node* insert(struct Node* root, int value) {
+	if (root == NULL) {
+		return createNode(value);
+	}
+
+	if (root->data == value) {
+		return root;
+	}
+
+	if (value < root->data) {
+		root->left = insert(root->left, value);
+	} else if (value > root->data) {
+		root->right = insert(root->right, value);
+	}
+
+	return root;
 }
 
 // print a tree
@@ -88,6 +105,11 @@ int main() {
 	printf("]\n");
 
 	printf("Root: %d\n", root->data);
+
+	// test cases:
+	printf("--Test cases:\n");
+	printf("inserting number: 50\n");
+	root = insert(root, 50);
 
 	printTree(root);
 
