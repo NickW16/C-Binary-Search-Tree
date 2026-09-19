@@ -136,6 +136,25 @@ int height(struct Node* node) {
 	return 1 + (left > right ? left : right);
 }
 
+int depth(struct Node* root, int value) {
+	struct Node* current = root;
+	int d = 0;
+
+	while (current != NULL) {
+		if (current->data == value) {
+			return d;
+		}
+		d++;
+
+		if (value < current->data) {
+			current = current->left;
+		} else {
+			current = current->right;
+		}
+	}
+	return -1;
+}
+
 // print a tree
 void printSpaces(int count) {
 	for (int i = 0; i < count; i++) {
@@ -227,6 +246,12 @@ int main() {
 	struct Node* node22 = find(root, 22);
 	if (node22 != NULL) {
 		printf("Height of node 22: %d\n", height(node22));
+	}
+
+	printf("\n -- Testing depth -- \n");
+	int depthNode22 = depth(root, 22);
+	if (depthNode22 != -1) {
+		printf("Depth of node 22: %d\n", depthNode22);
 	}
 
 	printTree(root);
