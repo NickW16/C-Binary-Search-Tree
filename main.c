@@ -129,6 +129,13 @@ struct Node* find(struct Node* root, int value) {
 	}
 }
 
+int height(struct Node* node) {
+	if (node == NULL) return -1;
+	int left = height(node->left);
+	int right = height(node->right);
+	return 1 + (left > right ? left : right);
+}
+
 // print a tree
 void printSpaces(int count) {
 	for (int i = 0; i < count; i++) {
@@ -214,6 +221,12 @@ int main() {
 	struct Node* result = find(root, 22);
 	if (result == NULL) {
 		printf("22 not found in tree\n");
+	}
+
+	printf("\n -- Testing height -- \n");
+	struct Node* node22 = find(root, 22);
+	if (node22 != NULL) {
+		printf("Height of node 22: %d\n", height(node22));
 	}
 
 	printTree(root);
