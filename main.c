@@ -155,6 +155,47 @@ int depth(struct Node* root, int value) {
 	return -1;
 }
 
+int checkBalance(struct Node* node) {
+	if (node == NULL) return 0;
+
+	int leftHeight = checkBalance(node->left);
+	if (leftHeight == -1) return -1;
+
+	int rightHeight = checkBalance(node->right);
+	if (rightHeight == -1) return -1;
+
+	if (((leftHeight - rightHeight) > 1) || (rightHeight - leftHeight) > 1) return -1;
+
+	return 1 + (leftHeight > rightHeight ? leftHeight : rightHeight);
+}
+
+int isBalanced(struct Node* root) {
+	return checkBalance(root) != -1;
+}
+
+// levelOrder with callback function to mimic JS
+void levelOrder(struct Node* root, void(*callback)(struct Node*)) {
+	if (root == NULL) return;
+
+	// queue size
+	struct Node* queue[100];
+	int front = 0, back = 0;
+
+	queue[back++] = root;
+
+	while(front < back) {
+		struct Node* current = queue[front++];
+		callback(current); // callback
+
+		if (current->left != NULL) queue[back++] = current->left;
+		if (current->right != NULL) queue[back++] = current->right;
+	}
+}
+
+void printNode(struct Node* node) {
+	printf("%d ", node->data);
+}
+
 // print a tree
 void printSpaces(int count) {
 	for (int i = 0; i < count; i++) {
@@ -190,6 +231,26 @@ void freeTree(struct Node* root) {
 		freeTree(root->right);
 		free(root);
 	}
+}
+
+// rebalance
+int collectInOrder(struct Node* root, int* arr, int index) {
+	if (root == NULL) return index;
+
+	index = collectInOrder(root->left, arr, index);
+	arr[index++] = root->data;
+	index = collectInOrder(root->right, arr, index);
+
+	return index;
+}
+
+struct Node* rebalance(struct Node* root) {
+	int values[100];
+	int count = collectInOrder(root, values, 0);
+
+	freeTree(root);
+
+	return buildTree(values, 0, count - 1);
 }
 
 int main() {
@@ -253,6 +314,20 @@ int main() {
 	if (depthNode22 != -1) {
 		printf("Depth of node 22: %d\n", depthNode22);
 	}
+
+	printf("\n-- Testing isBalanced --\n");
+	if (isBalanced(root)) {
+    printf("Tree is balanced!\n");
+	} else {
+    printf("Tree is NOT balanced!\n");
+	}
+
+	root = rebalance(root);
+	printf("After rebalance, isBalanced: %s\n", isBalanced(root) ? "Yes" : "No");
+
+	printf("Level-order: ");
+	levelOrder(root, printNode);
+	printf("\n");
 
 	printTree(root);
 
